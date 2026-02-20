@@ -42,10 +42,10 @@ static inline void T##_pop(Darray_##T* darray, u32 count) {                     
    if (count > darray->size) darray->size = 0;                                                                         \
    else darray->size -= count;                                                                                         \
 }                                                                                                                      \
-static inline T* T##_at(Darray_##T* darray, u32 index)  {                                                              \
+static inline T* T##_unsafe_at(Darray_##T* darray, u32 index)  {                                                              \
    return &darray->node[index];                                                                                        \
 }                                                                                                                      \
-static inline T* T##_safe_at(Darray_##T* darray, u32 index)  {  /* Beware of segfaults after calling this */           \
+static inline T* T##_at(Darray_##T* darray, u32 index)  {  /* Beware of segfaults after calling this */           \
    if (index >= darray->size) return NULL;                                                                             \
    return &darray->node[index];                                                                                        \
 }                                                                                                                      \
