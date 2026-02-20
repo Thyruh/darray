@@ -10,7 +10,7 @@ int main(void) {
    Darray_Darray_i32 v_i32s = Darray_i32_new();
 
    i32_reserve(&i32s, 100);
-   for (u32 i = 0; i < 100; i++) i32_push(&i32s, i);
+   for (u32 i = 0; i < 100; i++) i32_push(&i32s, i*2);
 
    printf("-------------------------------------- Darray of darrays ----------------------------------\n");
 
@@ -35,7 +35,7 @@ int main(void) {
    printf("elements: ");
    for (u32 i = 0; i < i32s.size-1; i++) {
       if (!i32_at(&i32s, i)) {
-         fprintf(stderr, "[OUT OF BOUNDS ACCESS]: %s:%d:%s\n", __FILE__, __LINE__-1, " _safe_at()");
+         fprintf(stderr, "[OUT OF BOUNDS ACCESS]: %s:%d:%s\n", __FILE__, __LINE__-1, " _at()");
          printf("\n");
          exit(1);
       }
@@ -47,7 +47,7 @@ int main(void) {
    printf("-------------------------------------- Unsafe access ----------------------------------\n");
 
    printf("elements: ");
-   for (u32 i = 0; i < 108; i++) { // Unsafe
+   for (u32 i = 0; i < 108; i++) {
       printf("%d, ", *i32_unsafe_at(&i32s, i));
    }
    printf("%d.\n", *i32_unsafe_at(&i32s, 108));

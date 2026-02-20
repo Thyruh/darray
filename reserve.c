@@ -9,7 +9,7 @@ int main() {
 
    u32_reserve(&u32s,  SIZE); // 1 reallocation instead of log2(SIZE) allocations
 
-   for (u64 i = 0; i < SIZE; i++) {
+   for (u32 i = 0; i < SIZE; i++) {
       u32_push(&u32s, i);
    }
 
