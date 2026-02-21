@@ -2,29 +2,14 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
-#include <stdint.h>
-
-typedef int8_t i8;
-typedef int16_t i16;
-typedef int32_t i32;
-typedef int64_t i64;
-typedef uint8_t u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-
-typedef bool b32;
-
-typedef float f32;
-typedef double f64;
 
 #define DARRAY_INIT(T)                                                                                                 \
    typedef struct {                                                                                                    \
       T* node;                                                                                                         \
-      u32 size;                                                                                                        \
-      u32 capacity;                                                                                                    \
+      unsigned int size;                                                                                               \
+      unsigned int capacity;                                                                                           \
    } Darray_##T;                                                                                                       \
-static inline b32 T##_push(Darray_##T* darray, T item) {                                                               \
+static inline bool T##_push(Darray_##T* darray, T item) {                                                              \
    if (darray->capacity == 0) {                                                                                        \
       darray->capacity = 8;                                                                                            \
       darray->node = malloc(sizeof(T) * darray->capacity);                                                             \
@@ -38,18 +23,18 @@ static inline b32 T##_push(Darray_##T* darray, T item) {                        
    darray->node[darray->size++] = item;                                                                                \
    return true;                                                                                                        \
 }                                                                                                                      \
-static inline void T##_pop(Darray_##T* darray, u32 count) {                                                            \
+static inline void T##_pop(Darray_##T* darray, unsigned int count) {                                                   \
    if (count > darray->size) darray->size = 0;                                                                         \
    else darray->size -= count;                                                                                         \
 }                                                                                                                      \
-static inline T* T##_unsafe_at(Darray_##T* darray, u32 index)  {                                                       \
+static inline T* T##_unsafe_at(Darray_##T* darray, unsigned int index)  {                                              \
    return &darray->node[index];                                                                                        \
 }                                                                                                                      \
-static inline T* T##_at(Darray_##T* darray, u32 index)  {  /* Beware of segfaults after calling this */                \
+static inline T* T##_at(Darray_##T* darray, unsigned int index)  {  /* Beware of segfaults after calling this */       \
    if (index >= darray->size) return NULL;                                                                             \
    return &darray->node[index];                                                                                        \
 }                                                                                                                      \
-static inline b32 T##_reserve(Darray_##T* darray, u32 block)  {                                                        \
+static inline bool T##_reserve(Darray_##T* darray, unsigned int block)  {                                              \
    if (block <= darray->capacity) return true;                                                                         \
    T* tmp = realloc(darray->node, sizeof(T) * block);                                                                  \
    if (!tmp) return false;                                                                                             \
