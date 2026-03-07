@@ -13,12 +13,17 @@ static inline bool T##_push(Darray_##T* darray, T item) {                       
    if (darray->capacity == 0) {                                                                                        \
       darray->capacity = 8;                                                                                            \
       darray->node = malloc(sizeof(T) * darray->capacity);                                                             \
+      if (!darray->node) {                                                                                             \
+         darray->capacity = 0;                                                                                         \
+         return false;                                                                                                 \
+      }                                                                                                                \
    }                                                                                                                   \
    if (darray->size >= darray->capacity) {                                                                             \
-      darray->capacity *= 2;                                                                                           \
-      T* tmp = realloc(darray->node, sizeof(T) * darray->capacity);                                                    \
+      size_t new_capacity = darray->capacity + darray->capacity / 2;                                                   \
+      T* tmp = realloc(darray->node, sizeof(T) * new_capacity);                                                        \
       if (!tmp) return false;                                                                                          \
       darray->node = tmp;                                                                                              \
+      darray->capacity = new_capacity;                                                                                 \
    }                                                                                                                   \
    darray->node[darray->size++] = item;                                                                                \
    return true;                                                                                                        \
@@ -49,3 +54,6 @@ static inline void T##_free(Darray_##T* darray) {                               
    free(darray->node);                                                                                                 \
    *darray = T##_new();                                                                                                \
 }
+
+/* TODO: argc argv kind of array inside here to keep track of the types inputted and constuct
+                macros around the created functions. _new(char* name) + DARRAY_HELPER(T, name)  */ 
