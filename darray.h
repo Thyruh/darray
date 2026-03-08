@@ -35,7 +35,7 @@ static inline void T##_pop(Darray_##T* darray, size_t count) {                  
 static inline T* T##_unsafe_at(Darray_##T* darray, size_t index) {                                                     \
    return &darray->node[index];                                                                                        \
 }                                                                                                                      \
-static inline T* T##_at(Darray_##T* darray, size_t index)  {  /* Beware of segfaults after calling this */             \
+static inline T* T##_at(Darray_##T* darray, size_t index)  {  /* Check for NULL after calling this */                  \
    if (index >= darray->size) return NULL;                                                                             \
    return &darray->node[index];                                                                                        \
 }                                                                                                                      \
@@ -55,5 +55,13 @@ static inline void T##_free(Darray_##T* darray) {                               
    *darray = T##_new();                                                                                                \
 }
 
-/* TODO: argc argv kind of array inside here to keep track of the types inputted and constuct
-                macros around the created functions. _new(char* name) + DARRAY_HELPER(T, name)  */ 
+#define DARRAY_BIND(T, varname)/* Invoke with: "static DARRAY_BIND()" to ensure it stays within the translation unit*/ \
+    Darray_##T varname = {NULL, 0, 0};                                                                                 \
+    static inline bool varname##_push(T item)          { return T##_push(&varname, item); }                            \
+    static inline void varname##_pop(size_t count)     { T##_pop(&varname, count); }                                   \
+    static inline T*   varname##_at(size_t index)      { return T##_at(&varname, index); }                             \
+    static inline T*   varname##_unsafe_at(size_t idx) { return T##_unsafe_at(&varname, idx); }                        \
+    static inline bool varname##_reserve(size_t block) { return T##_reserve(&varname, block); }                        \
+    static inline void varname##_free()                { T##_free(&varname);                                           \
+}
+
