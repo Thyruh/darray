@@ -1,7 +1,6 @@
-#pragma once
-
 #include <stdlib.h>
-#include <stdbool.h>
+#define ANSI_COLOR_RED     "\x1b[31m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
 
 #define DARRAY_INIT(T)                                                                                                 \
    typedef struct {                                                                                                    \
@@ -32,14 +31,35 @@ static inline void T##_pop(Darray_##T* darray, size_t count) {                  
    if (count > darray->size) darray->size = 0;                                                                         \
    else darray->size -= count;                                                                                         \
 }                                                                                                                      \
-static inline T* T##_unsafe_at(Darray_##T* darray, size_t index) {                                                     \
+static inline T T##_unsafe_at(Darray_##T* darray, size_t index) {                                                      \
+   return darray->node[index];                                                                                         \
+}                                                                                                                      \
+static inline T* T##_unsafe_at_ptr(Darray_##T* darray, size_t index) {                                                 \
    return &darray->node[index];                                                                                        \
 }                                                                                                                      \
-static inline T* T##_at(Darray_##T* darray, size_t index)  {  /* Check for NULL after calling this */                  \
-   if (index >= darray->size) return NULL;                                                                             \
+static inline T T##_at(Darray_##T* darray, size_t index) {                                                             \
+   if (index >= darray->size) {                                                                                        \
+      printf("\n%s%sPanic: _at() access out of bounds\n%s", ANSI_COLOR_RED, "[DARRAY] ", ANSI_COLOR_RESET);            \
+      exit(1);                                                                                                         \
+   }                                                                                                                   \
+   return darray->node[index];                                                                                         \
+}                                                                                                                      \
+static inline T* T##_at_ptr(Darray_##T* darray, size_t index) {                                                        \
+   if (index >= darray->size) {                                                                                        \
+      printf("\n%s%sPanic: _at_ptr() access out of bounds\n%s", ANSI_COLOR_RED, "[DARRAY] ", ANSI_COLOR_RESET);        \
+      exit(1);                                                                                                         \
+   }                                                                                                                   \
    return &darray->node[index];                                                                                        \
 }                                                                                                                      \
-static inline bool T##_reserve(Darray_##T* darray, size_t block)  {                                                    \
+static inline void T##_replace(Darray_##T* darray, size_t index, T new) {                                              \
+   *T##_at_ptr(darray, index) = new;                                                                                   \
+}                                                                                                                      \
+static inline void T##_remove(Darray_##T* darray, size_t index) {                                                      \
+   for(size_t i = index; i < darray->size--; i++) {                                                                    \
+      T##_replace(darray, index, T##_at(darray, i+1));                                                                 \
+   }                                                                                                                   \
+}                                                                                                                      \
+static inline bool T##_reserve(Darray_##T* darray, size_t block) {                                                     \
    if (block <= darray->capacity) return true;                                                                         \
    T* tmp = realloc(darray->node, sizeof(T) * block);                                                                  \
    if (!tmp) return false;                                                                                             \
@@ -55,13 +75,16 @@ static inline void T##_free(Darray_##T* darray) {                               
    *darray = T##_new();                                                                                                \
 }
 
-#define DARRAY_BIND(T, varname)/* Invoke with: "static DARRAY_BIND()" to ensure it stays within the translation unit*/ \
+/* Invoke with "static DARRAY_BIND()" to ensure it stays within the translation unit.  */
+/* _at is excluded by design. Define it manually after binding:                         */
+#define DARRAY_BIND(T, varname)                                                                                        \
     Darray_##T varname = {NULL, 0, 0};                                                                                 \
-    static inline bool varname##_push(T item)          { return T##_push(&varname, item); }                            \
-    static inline void varname##_pop(size_t count)     { T##_pop(&varname, count); }                                   \
-    static inline T*   varname##_at(size_t index)      { return T##_at(&varname, index); }                             \
-    static inline T*   varname##_unsafe_at(size_t idx) { return T##_unsafe_at(&varname, idx); }                        \
-    static inline bool varname##_reserve(size_t block) { return T##_reserve(&varname, block); }                        \
-    static inline void varname##_free()                { T##_free(&varname);                                           \
-}
+    static inline bool varname##_push(T item)                 { return T##_push(&varname, item); }                     \
+    static inline void varname##_pop(size_t count)            { T##_pop(&varname, count); }                            \
+    static inline T    varname##_unsafe_at(size_t idx)        { return T##_unsafe_at(&varname, idx); }                 \
+    static inline T    varname##_at(size_t idx)               { return T##_at(&varname, idx); }                        \
+    static inline bool varname##_reserve(size_t block)        { return T##_reserve(&varname, block); }                 \
+    static inline void varname##_replace(size_t index, T new) { T##_replace(&varname, index, new); }                   \
+    static inline void varname##_remove(size_t index)         { T##_remove(&varname, index); }                         \
+    static inline void varname##_free()                       { T##_free(&varname); }
 
