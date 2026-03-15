@@ -19,8 +19,11 @@ DARRAY_INIT(i32)
 DARRAY_BIND(i32, i32s)
 
 int main(void) {
-   i32s_reserve(100);
-   for (u32 i = 0; i < 100; i++) i32s_push(i << 1);
+   for (u32 i = 0; i <= 10000; i++) i32s_push(i);
+
+   i32s_append(-1);
+   i32s_append(-2);
+   i32s_append(10);
 
    printf("-------------------------------------- Full darray of integers ----------------------------------\n");
 
@@ -30,8 +33,6 @@ int main(void) {
    }
    printf("%d.\n", i32s_at(i32s.size-1));
    printf("length = %zu\n", i32s.size);
-
-   i32s_pop(10);
 
    printf("-------------------------------------- Popped darray of integers ----------------------------------\n");
    

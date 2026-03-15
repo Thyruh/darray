@@ -55,9 +55,19 @@ static inline void T##_replace(Darray_##T* darray, size_t index, T new) {       
    *T##_at_ptr(darray, index) = new;                                                                                   \
 }                                                                                                                      \
 static inline void T##_remove(Darray_##T* darray, size_t index) {                                                      \
-   for(size_t i = index; i < darray->size--; i++) {                                                                    \
-      T##_replace(darray, index, T##_at(darray, i+1));                                                                 \
+   for(size_t i = index; i < darray->size-1; i++) {                                                                    \
+      T##_replace(darray, i, T##_at(darray, i+1));                                                                     \
    }                                                                                                                   \
+   darray->size--;                                                                                                     \
+}                                                                                                                      \
+static inline void T##_append(Darray_##T* darray, T new) {                                                             \
+   darray->size++;                                                                                                     \
+   T##_push(darray, 0);                                                                                                \
+   T##_remove(darray, darray->size);                                                                                   \
+   for(size_t i = darray->size-1; i > 0; i--) {                                                                        \
+      T##_replace(darray, i, T##_at(darray, i-1));                                                                     \
+   }                                                                                                                   \
+   T##_replace(darray, 0, new);                                                                                        \
 }                                                                                                                      \
 static inline bool T##_reserve(Darray_##T* darray, size_t block) {                                                     \
    if (block <= darray->capacity) return true;                                                                         \
@@ -86,5 +96,6 @@ static inline void T##_free(Darray_##T* darray) {                               
     static inline bool varname##_reserve(size_t block)        { return T##_reserve(&varname, block); }                 \
     static inline void varname##_replace(size_t index, T new) { T##_replace(&varname, index, new); }                   \
     static inline void varname##_remove(size_t index)         { T##_remove(&varname, index); }                         \
+    static inline void varname##_append(T new)                { T##_append(&varname, new); }                           \
     static inline void varname##_free()                       { T##_free(&varname); }
 
