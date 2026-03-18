@@ -89,3 +89,10 @@ int main(void) {
 ```
 
 There is no built-in print function. Even for int. You'll figure it out.
+
+
+## To compile use make
+```
+make
+```
+This will compile all the .c files (even custom ones you might create) in the directory into separate binaries
