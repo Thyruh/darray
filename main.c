@@ -19,11 +19,11 @@ DARRAY_INIT(i32)
 DARRAY_BIND(i32, i32s)
 
 int main(void) {
-   for (u32 i = 0; i <= 10000; i++) i32s_push(i);
+   for (u32 i = 0; i <= 100; i++) i32s_push(i);
+
 
    i32s_append(-1);
    i32s_append(-2);
-   i32s_append(10);
 
    printf("-------------------------------------- Full darray of integers ----------------------------------\n");
 
