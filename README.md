@@ -1,4 +1,4 @@
-# darray.h — v0.0.1
+# darray.h - v0.0.1
 A type-generic dynamic array for C, generated via macros.
 
 ## Setup
@@ -9,7 +9,7 @@ DARRAY_INIT(int)   →   Darray_int, int_push(), int_pop(), etc.
 ```
 
 ## A word on removal
-Most operations that appear to "remove" elements don't actually free or overwrite anything — they just decrement size, making those slots inaccessible through the normal interface. The memory is still there.
+Most operations that appear to "remove" elements don't actually free or overwrite anything - they just decrement size, making those slots inaccessible through the normal interface. The memory is still there.
 
 If the function name contains the word **remove**, it does a real delete. Everything else is just a size adjustment.
 
@@ -29,13 +29,13 @@ Returns the last element and decrements size. Does not free. Like the instructio
 
 **`<T>_append(Darray_<T>*, T new)`**
 Inserts `new` at index 0, shifting everything else right.
-This is a prepend — named append for symmetry with push. Be aware of the O(n) cost.
+This is a prepend - named append for symmetry with push. Be aware of the O(n) cost.
 
 **`<T>_insert_at(Darray_<T>*, size_t index, T new)`**
 Inserts `new` at `index`, shifting everything from `index` onward right.
 
 **`<T>_at(Darray_<T>*, size_t index)`**
-Returns the element at `index`. Bounds-checked — calls `abort()` on out-of-bounds access.
+Returns the element at `index`. Bounds-checked - calls `abort()` on out-of-bounds access.
 
 **`<T>_at_ptr(Darray_<T>*, size_t index)`**
 Same as `_at` but returns a pointer to the element. Bounds-checked.
@@ -55,7 +55,7 @@ Ensures `capacity >= block`. Reallocates only if current capacity is insufficien
 **`<T>_shrink(Darray_<T>*)`**
 Sets `capacity = size`. Frees unused memory. Call after you're done growing the array and want a tight allocation.
 
-**`<T>_grow(Darray_<T>*)`** *(internal — do not call)*
+**`<T>_grow(Darray_<T>*)`** *(internal - do not call)*
 Forces an immediate reallocation. Called automatically by push and insert. Calling it manually is safe but pointless unless you're poking at the internals for a reason.
 
 ## DARRAY_BIND
@@ -77,10 +77,10 @@ DARRAY_INIT(int)
 DARRAY_BIND(int, ints)
 
 int main(void) {
-    ints_push(10);        // bound interface — no pointer needed
+    ints_push(10);        // bound interface - no pointer needed
     ints_push(20);
 
-    Darray_int local = int_new();   // raw interface — fully manual
+    Darray_int local = int_new();   // raw interface - fully manual
     int_push(&local, 99);
     int_free(&local);
 
