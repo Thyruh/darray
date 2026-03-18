@@ -1,3 +1,5 @@
+// This is a very compact presentation - refer to README for descriptions, or to the test.c
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -21,10 +23,6 @@ DARRAY_BIND(i32, i32s)
 int main(void) {
    for (u32 i = 0; i <= 100; i++) i32s_push(i);
 
-
-   i32s_append(-1);
-   i32s_append(-2);
-
    printf("-------------------------------------- Full darray of integers ----------------------------------\n");
 
    printf("elements: ");
@@ -37,6 +35,8 @@ int main(void) {
    printf("-------------------------------------- Popped darray of integers ----------------------------------\n");
    
    printf("POPPED 10 ELEMENTS\n");
+
+   i32s_strip(10);
 
    printf("elements: ");
    for (u32 i = 0; i < i32s.size-1; i++) {
