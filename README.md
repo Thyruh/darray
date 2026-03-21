@@ -46,6 +46,9 @@ Returns the element at `index` with no bounds checking. Faster, but undefined be
 **`<T>_replace(Darray_<T>*, size_t index, T new)`**
 Overwrites the element at `index` with `new`.
 
+**`<T>_remove(Darray_<T>*, size_t index, T new)`**
+Removes the element at `index`, sliding everything to the right of `index` one to the left.
+
 **`<T>_strip(Darray_<T>*, size_t block)`**
 Does `size -= block`. A bulk pop. Does not free memory.
 
