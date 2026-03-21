@@ -59,7 +59,7 @@ Ensures `capacity >= block`. Reallocates only if current capacity is insufficien
 Sets `capacity = size`. Frees unused memory. Call after you're done growing the array and want a tight allocation.
 
 **`<T>_grow(Darray_<T>*)`** *(internal - do not call)*
-Forces an immediate reallocation. Called automatically by push and insert. Calling it manually is safe but pointless unless you're poking at the internals for a reason.
+Forces an immediate reallocation. Called automatically by push, append, and insert_at . Calling it manually is safe but pointless unless you're poking at the internals for a reason.
 
 ## DARRAY_BIND
 `DARRAY_BIND(<T>, name)` creates a global `Darray_<T>` named `name` and generates thin wrapper functions so you can drop the pointer argument.
