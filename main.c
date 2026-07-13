@@ -33,7 +33,7 @@ int main(void) {
    printf("length = %zu\n", i32s.size);
 
    printf("-------------------------------------- Popped darray of integers ----------------------------------\n");
-   
+
    printf("POPPED 10 ELEMENTS\n");
 
    i32s_strip(10);

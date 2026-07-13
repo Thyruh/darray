@@ -43,9 +43,9 @@ typedef struct {
    f64 val;
 } Vec2;
 
-   DARRAY_INIT(i32)
-   DARRAY_INIT(f64)
-   DARRAY_INIT(char)
+DARRAY_INIT(f64)
+DARRAY_INIT(i32)
+DARRAY_INIT(char)
 DARRAY_INIT(Vec2)
 
    /* ── Helpers ──────────────────────────────────────────────────────── */
